@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../constants.dart';
@@ -54,58 +56,55 @@ class _DetailsState extends State<Details> {
           const SizedBox(
             height: 70,
           ),
-          Container(
-            child: Column(
-              children: [
-                titleSubtitle(_name, _id, titleSize: 30, subtitleSize: 15),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-                  child: Container(
-                    height: 70,
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 50, right: 50),
-                    decoration: shadowBox(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        titleSubtitle(_age, "Age"),
-                        titleSubtitle(_weight, "Wieght"),
-                        titleSubtitle(_hieght, "Hieght"),
-                      ],
-                    ),
+          Column(
+            children: [
+              titleSubtitle(_name, _id, titleSize: 30, subtitleSize: 15),
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
+                child: Container(
+                  height: 70,
+                  padding:
+                      const EdgeInsets.only(top: 10, left: 50, right: 50),
+                  decoration: shadowBox(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      titleSubtitle(_age, "Age"),
+                      titleSubtitle(_weight, "Wieght"),
+                      titleSubtitle(_hieght, "Hieght"),
+                    ],
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
           const SizedBox(
             height: 20,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Container(
-                child: Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Scan Report"),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image:_scanImage),
-                  ),
-                )),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text("Prediction"),
-                reportCard(_report)
-              ],
+            const Text("Scan Report"),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image:_scanImage),
+              ),
             )),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text("Prediction"),
+            reportCard(_report)
+              ],
+            ),
           )
         ]));
   }
@@ -128,13 +127,13 @@ class _DetailsState extends State<Details> {
     return Column(
       children: [
         Text(
-          "${title}",
+          title,
           style: TextStyle(
               fontSize: titleSize,
               color: Colors.black,
               fontWeight: FontWeight.bold),
         ),
-        Text("${subtitle}")
+        Text(subtitle)
       ],
     );
   }

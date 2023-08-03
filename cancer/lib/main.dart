@@ -3,9 +3,7 @@ import 'package:cancer/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:cancer/screen/Welcome/welcome_screen.dart';
 
-
 void main() => runApp(const MyApp());
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -33,7 +31,8 @@ class MyApp extends StatelessWidget {
             fillColor: kPrimaryLightColor,
             iconColor: kPrimaryColor,
             prefixIconColor: kPrimaryColor,
-            contentPadding: EdgeInsets.symmetric(horizontal:defaultPadding, vertical: defaultPadding),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: defaultPadding, vertical: defaultPadding),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
               borderSide: BorderSide.none,

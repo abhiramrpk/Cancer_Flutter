@@ -1,3 +1,4 @@
+import 'package:cancer/components/details.dart';
 import 'package:flutter/material.dart';
 import 'package:cancer/constants.dart';
 import 'dart:io';
@@ -8,6 +9,22 @@ saveForm(BuildContext ctx) async {
   var formData = <String, dynamic>{};
   var _profileImage;
   final _image_picker = ImagePicker();
+
+  profileUpload() async {
+    var dio = Dio();
+    try {
+      Response response =
+          await dio.get('http://192.168.56.1:8000/get-csrf-token');
+      dio.options.headers['X-CSRF-TOKEN'] = response.headers['csrf-token'];
+
+      FormData data = FormData.fromMap(formData);
+      var apiResponse =
+          await dio.post("http://192.168.56.1:8000/upload/", data: data);
+      print(apiResponse.data);
+    } catch (e) {
+      print('Error fetching CSRF token: $e');
+    }
+  }
 
   showModalBottomSheet(
     shape: const RoundedRectangleBorder(
@@ -85,22 +102,10 @@ saveForm(BuildContext ctx) async {
                   SizedBox(
                     width: MediaQuery.of(ctx).size.width / 2,
                     child: TextButton(
-                      onPressed: () async {
-                        var dio = Dio();
-                        try {
-                          Response response = await dio
-                              .get('http://192.168.56.1:8000/get-csrf-token');
-                          dio.options.headers['X-CSRF-TOKEN'] =
-                              response.headers['csrf-token'];
-
-                          FormData data = FormData.fromMap(formData);
-                          var apiResponse = await dio.post(
-                              "http://192.168.56.1:8000/upload/",
-                              data: data);
-                          print(apiResponse.data);
-                        } catch (e) {
-                          print('Error fetching CSRF token: $e');
-                        }
+                      onPressed: () {
+                        profileUpload();
+                        Navigator.push(ctx,
+                            MaterialPageRoute(builder: (ctx) => const Details()));
                       },
                       style: const ButtonStyle(
                           backgroundColor:
