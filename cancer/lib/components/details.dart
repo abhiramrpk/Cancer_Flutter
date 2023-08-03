@@ -31,7 +31,7 @@ class _DetailsState extends State<Details> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.30,
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(
                             'assets/images/diagnosing-oral-cancer.jpeg'),
@@ -46,12 +46,12 @@ class _DetailsState extends State<Details> {
                       radius: 70,
                       backgroundImage: _profileImage != null
                           ? (_profileImage)
-                          : AssetImage(''),
+                          : const AssetImage(''),
                     ),
                   )),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 70,
           ),
           Container(
@@ -78,7 +78,7 @@ class _DetailsState extends State<Details> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -87,7 +87,7 @@ class _DetailsState extends State<Details> {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Scan Report"),
+                const Text("Scan Report"),
                 InkWell(
                   onTap: () {},
                   child: Container(
@@ -99,10 +99,10 @@ class _DetailsState extends State<Details> {
                             image:_scanImage),
                   ),
                 )),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text("Prediction"),
+                const Text("Prediction"),
                 reportCard(_report)
               ],
             )),
@@ -155,7 +155,7 @@ Row reportCard(List predict) {
     children: [
       Text(
         predict[0],
-        style: TextStyle(
+        style: const TextStyle(
             fontSize: 30, color: kPrimaryColor, fontWeight: FontWeight.w600),
       ),
       CircularPercentIndicator(
@@ -166,7 +166,7 @@ Row reportCard(List predict) {
         lineWidth: 10,
         center: Text(
           (predict[1]*100).toStringAsFixed(0),
-          style: TextStyle(fontSize: 15, color: kPrimaryColor),
+          style: const TextStyle(fontSize: 15, color: kPrimaryColor),
         ),
       )
     ],

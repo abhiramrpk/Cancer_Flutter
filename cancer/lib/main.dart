@@ -1,4 +1,4 @@
-import 'package:cancer/components/details.dart';
+//import 'package:cancer/components/details.dart';
 import 'package:cancer/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:cancer/screen/Welcome/welcome_screen.dart';

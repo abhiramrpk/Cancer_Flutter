@@ -58,7 +58,6 @@ class MobileWelcomeScreen extends StatefulWidget {
 class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
   List? _output;
   var _image, accuracy;
-  var _profileImage;
   bool _loading = false;
   final _image_picker = ImagePicker();
 
@@ -66,9 +65,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
   void initState() {
     super.initState();
     _loading = true;
-    }
-
- 
+  }
 
   pickImage(source) async {
     var image = await _image_picker.pickImage(source: source);
@@ -90,8 +87,6 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
           await dio.get('http://192.168.56.1:8000/get-csrf-token');
       dio.options.headers['X-CSRF-TOKEN'] = response.headers['csrf-token'];
 
-      if (image != null) {
-        var img = MultipartFile.fromFile(image.path, filename: image.name);
 
         File file = File(image.path);
         MultipartFile multipartFile = MultipartFile.fromFileSync(file.path,
@@ -99,10 +94,10 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
         print(multipartFile);
         FormData data = FormData.fromMap({'image_url': multipartFile});
         print(data.files);
-        var response =
-            await dio.post("http://192.168.56.1:8000/upload/", data: data);
-        print(response.data);
-        accuracy = double.parse(response.data);
+        var apiResponse =
+            await dio.post("http://192.168.56.1:8000/scan/", data: data);
+        print(apiResponse.data);
+        accuracy = double.parse(apiResponse.data);
         setState(() {
           if (accuracy < 0.5) {
             _output = ["Cancer", 1 - accuracy];
@@ -111,7 +106,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
           }
           _loading = false;
         });
-      }
+      
     } catch (e) {
       print('Error fetching CSRF token: $e');
     }
@@ -141,12 +136,12 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
               flex: 8,
               child: _image != null
                   ? Column(
-                    children: [
-                      Container(
+                      children: [
+                        Container(
                           clipBehavior: Clip.hardEdge,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30)),
-                          padding:const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: 350,
                           width: 350,
                           child: Image.file(
@@ -156,38 +151,35 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
                         ),
                         const SizedBox(height: defaultPadding * 2),
                         card(),
-                    ],
-                  )
+                      ],
+                    )
                   : InkWell(
                       child: Image.asset("assets/images/photo.png"),
                       onTap: () => {imageOption(context)},
                     ),
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
-        
       ],
     );
   }
 
   Column card() {
     return Column(
-              children: [
-                accuracy == null ? loading() : reportCard(),
-                // TextButton(onPressed: ()=>{}, child: Text("Save",style: TextStyle(fontSize: 30),))
-                const SizedBox(
-                  height: defaultPadding * 2,
-                ),
-                accuracy!=null?
-                saveButton():SizedBox(),
-                const SizedBox(
-                  height: defaultPadding * 2,
-                ),
-                accuracy!=null?
-                scanButton():SizedBox(),
-              ],
-            );
+      children: [
+        accuracy == null ? loading() : reportCard(),
+        // TextButton(onPressed: ()=>{}, child: Text("Save",style: TextStyle(fontSize: 30),))
+        const SizedBox(
+          height: defaultPadding * 2,
+        ),
+        accuracy != null ? saveButton() : const SizedBox(),
+        const SizedBox(
+          height: defaultPadding * 2,
+        ),
+        accuracy != null ? scanButton() : const SizedBox(),
+      ],
+    );
   }
 
   Container saveButton() {
@@ -196,7 +188,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
       child: ElevatedButton(
         onPressed: () => saveForm(context),
         style: ButtonStyle(
-            padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
+            padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
             shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(80.0)))),
         child: Ink(
@@ -210,7 +202,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
           child: Container(
             constraints: const BoxConstraints(minHeight: 50.0),
             alignment: Alignment.center,
-            child:const Text(
+            child: const Text(
               "Save",
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 15),
@@ -227,21 +219,21 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
       child: ElevatedButton(
         onPressed: () => imageOption(context),
         style: ButtonStyle(
-            padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
+            padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
             shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(80.0)))),
         child: Ink(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [kPrimaryColor, Color.fromARGB(255, 209, 186, 240)],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
               borderRadius: BorderRadius.circular(30.0)),
           child: Container(
-            constraints: BoxConstraints(minHeight: 50.0),
+            constraints: const BoxConstraints(minHeight: 50.0),
             alignment: Alignment.center,
-            child: Text(
+            child: const Text(
               "Scan Again?",
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 15),
@@ -311,7 +303,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
           lineWidth: 10,
           center: Text(
             "${(_output?[1] * 100).toStringAsFixed(0)}%",
-            style: TextStyle(fontSize: 25, color: kPrimaryColor),
+            style: const TextStyle(fontSize: 25, color: kPrimaryColor),
           ),
         )
       ],
@@ -319,20 +311,15 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
   }
 
   Row loading() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-      const Text("Loading",style: TextStyle(fontSize: 30, color: kPrimaryColor)),
-      CircularProgressIndicator(
-        color: kPrimaryColor,
-      )
+        Text("Loading", style: TextStyle(fontSize: 30, color: kPrimaryColor)),
+        CircularProgressIndicator(
+          color: kPrimaryColor,
+        )
       ],
     );
   }
-
-
-
-
-  
 }
