@@ -5,21 +5,22 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
-saveForm(BuildContext ctx) async {
+saveForm(BuildContext ctx, File scan_image, report) async {
   var formData = <String, dynamic>{};
-  var _profileImage;
+  var _pImage;
+  var _name, _age, _weight, _height;
   final _image_picker = ImagePicker();
 
   profileUpload() async {
     var dio = Dio();
     try {
       Response response =
-          await dio.get('http://192.168.56.1:8000/get-csrf-token');
+          await dio.get('http://172.105.35.214:8000/get-csrf-token');
       dio.options.headers['X-CSRF-TOKEN'] = response.headers['csrf-token'];
 
       FormData data = FormData.fromMap(formData);
       var apiResponse =
-          await dio.post("http://192.168.56.1:8000/upload/", data: data);
+          await dio.post("http://172.105.35.214:8000/upload/", data: data);
       print(apiResponse.data);
     } catch (e) {
       print('Error fetching CSRF token: $e');
@@ -27,6 +28,7 @@ saveForm(BuildContext ctx) async {
   }
 
   showModalBottomSheet(
+    isScrollControlled: true,
     shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(50), topRight: Radius.circular(50))),
@@ -42,15 +44,23 @@ saveForm(BuildContext ctx) async {
             InkWell(
               child: const CircleAvatar(
                 radius: 70,
+                // backgroundImage: _pImage!:,
               ),
               onTap: () async {
-                _profileImage =
+                var image =
                     await _image_picker.pickImage(source: ImageSource.gallery);
-                File file = File(_profileImage.path);
+                if (image == null) return null;
+                _pImage = File(image.path);
+                // setState() {
+                //   _pImage = image;
+                // }
+
+                File file = File(image.path);
+                print(image.path);
                 MultipartFile multipartFile = MultipartFile.fromFileSync(
                     file.path,
                     filename: file.path.split('/').last);
-                formData["image_url"] = multipartFile;
+                formData["profile_url"] = multipartFile;
               },
             ),
             Padding(
@@ -58,14 +68,20 @@ saveForm(BuildContext ctx) async {
                 child: Column(children: [
                   TextField(
                     decoration: const InputDecoration(hintText: "Name"),
-                    onChanged: (value) => formData["name"] = value,
+                    onChanged: (value) {
+                      formData["name"] = value;
+                      _name = value;
+                    },
                   ),
                   const SizedBox(
                     height: defaultPadding,
                   ),
                   TextField(
                     decoration: const InputDecoration(hintText: "Age"),
-                    onChanged: (value) => formData["age"] = value,
+                    onChanged: (value) {
+                      formData["age"] = value;
+                      _age = value;
+                    },
                   ),
                   const SizedBox(
                     height: defaultPadding,
@@ -82,7 +98,10 @@ saveForm(BuildContext ctx) async {
                       Expanded(
                         child: TextField(
                           decoration: const InputDecoration(hintText: "Hieght"),
-                          onChanged: (value) => formData["height"] = value,
+                          onChanged: (value) {
+                            formData["height"] = value;
+                            _height = value;
+                          },
                         ),
                       ),
                       const SizedBox(
@@ -91,7 +110,10 @@ saveForm(BuildContext ctx) async {
                       Expanded(
                         child: TextField(
                           decoration: const InputDecoration(hintText: "Weight"),
-                          onChanged: (value) => formData["weight"] = value,
+                          onChanged: (value) {
+                            formData["weight"] = value;
+                            _weight = value;
+                          },
                         ),
                       ),
                     ],
@@ -104,8 +126,18 @@ saveForm(BuildContext ctx) async {
                     child: TextButton(
                       onPressed: () {
                         profileUpload();
-                        Navigator.push(ctx,
-                            MaterialPageRoute(builder: (ctx) => const Details()));
+                        Navigator.push(
+                            ctx,
+                            MaterialPageRoute(
+                                builder: (ctx) => Details(
+                                      profileImage: FileImage(_pImage),
+                                      name: _name,
+                                      age: _age,
+                                      weight: _weight,
+                                      hieght: _height,
+                                      scanImage: FileImage(scan_image),
+                                      report: report,
+                                    )));
                       },
                       style: const ButtonStyle(
                           backgroundColor:

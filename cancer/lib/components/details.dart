@@ -5,21 +5,39 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../constants.dart';
 
 class Details extends StatefulWidget {
-  const Details({super.key});
+  final profileImage;
+  final String name;
+  final String id;
+  final String age;
+  final String weight;
+  final String hieght ;
+  final scanImage ;
+  final report;
+
+  const Details(
+      {super.key,
+      required this.profileImage,
+      required this.name,
+      this.id='001',
+      required this.age,
+      required this.weight,
+      required this.hieght,
+      required this.scanImage,
+      required this.report});
 
   @override
   State<Details> createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
-  var _profileImage;
-  String _name = 'Name';
-  String _id = 'ID';
-  String _age='32';
-  String _weight = '68';
-  String _hieght = '1.75';
-  var _scanImage=AssetImage('assets/images/photo.png');
-  var _report = ['Cancer',0.0145];
+  // var _profileImage=pImage;
+  // String _name = 'Name';
+  // String _id = 'ID';
+  // String _age = '32';
+  // String _weight = '68';
+  // String _hieght = '1.75';
+  // var _scanImage = AssetImage('assets/images/photo.png');
+  // var _report = ['Cancer', 0.0145];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +64,8 @@ class _DetailsState extends State<Details> {
                     radius: 75,
                     child: CircleAvatar(
                       radius: 70,
-                      backgroundImage: _profileImage != null
-                          ? (_profileImage)
+                      backgroundImage: widget.profileImage != null
+                          ? (widget.profileImage)
                           : const AssetImage(''),
                     ),
                   )),
@@ -58,20 +76,19 @@ class _DetailsState extends State<Details> {
           ),
           Column(
             children: [
-              titleSubtitle(_name, _id, titleSize: 30, subtitleSize: 15),
+              titleSubtitle(widget.name, widget.id, titleSize: 30, subtitleSize: 15),
               Padding(
                 padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
                 child: Container(
                   height: 70,
-                  padding:
-                      const EdgeInsets.only(top: 10, left: 50, right: 50),
+                  padding: const EdgeInsets.only(top: 10, left: 50, right: 50),
                   decoration: shadowBox(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      titleSubtitle(_age, "Age"),
-                      titleSubtitle(_weight, "Wieght"),
-                      titleSubtitle(_hieght, "Hieght"),
+                      titleSubtitle(widget.age, "Age"),
+                      titleSubtitle(widget.weight, "Wieght"),
+                      titleSubtitle(widget.hieght, "Hieght"),
                     ],
                   ),
                 ),
@@ -86,23 +103,22 @@ class _DetailsState extends State<Details> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            const Text("Scan Report"),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image:_scanImage),
-              ),
-            )),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text("Prediction"),
-            reportCard(_report)
+                const Text("Scan Report"),
+                InkWell(
+                    onTap: () {},
+                    child: Container(
+                      height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover, image: widget.scanImage),
+                      ),
+                    )),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text("Prediction"),
+                reportCard(widget.report)
               ],
             ),
           )
@@ -164,7 +180,7 @@ Row reportCard(List predict) {
         percent: predict[1],
         lineWidth: 10,
         center: Text(
-          (predict[1]*100).toStringAsFixed(0),
+          (predict[1] * 100).toStringAsFixed(0),
           style: const TextStyle(fontSize: 15, color: kPrimaryColor),
         ),
       )

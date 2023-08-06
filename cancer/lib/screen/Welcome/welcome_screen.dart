@@ -60,11 +60,18 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
   var _image, accuracy;
   bool _loading = false;
   final _image_picker = ImagePicker();
-
+  var _pImage;
   @override
   void initState() {
     super.initState();
     _loading = true;
+  }
+
+  
+  stateSet(image) {
+    setState(() {
+      _pImage = image;
+    });
   }
 
   pickImage(source) async {
@@ -84,29 +91,27 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
     accuracy = null;
     try {
       Response response =
-          await dio.get('http://192.168.56.1:8000/get-csrf-token');
+          await dio.get('http://172.105.35.214:8000/get-csrf-token');
       dio.options.headers['X-CSRF-TOKEN'] = response.headers['csrf-token'];
 
-
-        File file = File(image.path);
-        MultipartFile multipartFile = MultipartFile.fromFileSync(file.path,
-            filename: file.path.split('/').last);
-        print(multipartFile);
-        FormData data = FormData.fromMap({'image_url': multipartFile});
-        print(data.files);
-        var apiResponse =
-            await dio.post("http://192.168.56.1:8000/scan/", data: data);
-        print(apiResponse.data);
-        accuracy = double.parse(apiResponse.data);
-        setState(() {
-          if (accuracy < 0.5) {
-            _output = ["Cancer", 1 - accuracy];
-          } else {
-            _output = ["Non Cancer", accuracy];
-          }
-          _loading = false;
-        });
-      
+      File file = File(image.path);
+      MultipartFile multipartFile = MultipartFile.fromFileSync(file.path,
+          filename: file.path.split('/').last);
+      print(multipartFile);
+      FormData data = FormData.fromMap({'image_url': multipartFile});
+      print(data.files);
+      var apiResponse =
+          await dio.post("http://172.105.35.214:8000/scan/", data: data);
+      print(apiResponse.data);
+      accuracy = double.parse(apiResponse.data);
+      setState(() {
+        if (accuracy < 0.5) {
+          _output = ["Cancer", 1 - accuracy];
+        } else {
+          _output = ["Non Cancer", accuracy];
+        }
+        _loading = false;
+      });
     } catch (e) {
       print('Error fetching CSRF token: $e');
     }
@@ -126,9 +131,12 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        const WelcomeImage(),
+        Padding(
+          padding: const EdgeInsets.only(top:2.0),
+          child: const WelcomeImage(),
+        ),
         Row(
           children: [
             const Spacer(),
@@ -186,7 +194,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
     return Container(
       width: 200,
       child: ElevatedButton(
-        onPressed: () => saveForm(context),
+        onPressed: () => saveForm(context, _image, _output),
         style: ButtonStyle(
             padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
             shape: MaterialStatePropertyAll(RoundedRectangleBorder(
@@ -322,4 +330,5 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
       ],
     );
   }
+
 }

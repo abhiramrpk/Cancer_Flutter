@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:cancer/constants.dart';
 
@@ -10,15 +10,8 @@ class WelcomeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          "WELCOME TO OraScan",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: defaultPadding * 2),
-      ],
-    );
+    return  Container(height: 150,
+      child: Image.asset('assets/images/logo.png'));
   }
 
 

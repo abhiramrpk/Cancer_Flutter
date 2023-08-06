@@ -1,5 +1,6 @@
 //import 'package:cancer/components/details.dart';
 import 'package:cancer/constants.dart';
+import 'package:cancer/screen/Welcome/flash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cancer/screen/Welcome/welcome_screen.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      home: const WelcomeScreen(),
+      home: const FlashScreen(),
     );
   }
 }
